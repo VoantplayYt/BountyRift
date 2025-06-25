@@ -19,7 +19,8 @@ if game.PlaceId == 85896571713843 then
 	local v_008 = true
 	local v_009 = {"x25"}
 	local v_010 = require(v_006.Shared.Utils.Stats.SecretBountyUtil)
-	local v_011 = v_010.Egg
+	local v_999 = v_010.Get()
+	local v_011 = v_999.Egg
 
 	local v_012 = {
 		["Crystal Egg"] = "crystal-egg",
