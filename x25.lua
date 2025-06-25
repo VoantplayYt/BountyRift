@@ -215,7 +215,7 @@ if game.PlaceId == 85896571713843 then
 
 		if not v_037 and v_008 then
 			warn("❌ Target Rift Not Found. Rejoining...")
-			v_007:Kick("❌ Rift Not Found.\nRejoining...")
+			v_007:Kick("❌\n Rift Not Found.\n" .. v_011)
 			task.wait(0.2)
 			v_002:Teleport(game.PlaceId, v_007)
 			break
