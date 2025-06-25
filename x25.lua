@@ -101,8 +101,8 @@ if game.PlaceId == 85896571713843 then
 		local v_023 = target.Position + Vector3.new(0, 10, 0)
 		local v_024 = (v_022 - v_023).Magnitude
 
-		local v_025 = 35
-		local v_026 = math.clamp(v_024 / v_025, 4, 35)
+		local v_025 = 500
+		local v_026 = math.clamp(v_024 / v_025, 4, 500)
 		local v_027 = v_024 / v_026
 
 		local v_028 = (v_023 - v_022).Unit
