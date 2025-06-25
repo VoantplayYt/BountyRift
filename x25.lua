@@ -119,16 +119,6 @@ if game.PlaceId == 85896571713843 then
 			if v_032 >= v_024 then
 				v_030:Disconnect()
 				print(string.format("✅ Arrived At %s (%.2f studs)", target.Name, v_024))
-
-				local v_034 = game:GetService("VirtualInputManager")
-				task.delay(1, function()
-					for i = 1, 5 do
-						v_034:SendKeyEvent(true, Enum.KeyCode.E, false, game)
-						task.wait(0.1)
-						v_034:SendKeyEvent(false, Enum.KeyCode.E, false, game)
-						task.wait(0.25)
-					end
-				end)
 			end
 		end)
 
@@ -186,6 +176,19 @@ Rejoining...")
 							v_015:FireServer("v_015", v_044.v_015)
 							task.wait(2)
 							tweenToRift(v_043)
+
+                				local v_034 = game:GetService("VirtualInputManager")
+				task.spawn(function()
+          while true do
+              for i = 1, 5 do
+                  v_034:SendKeyEvent(true, Enum.KeyCode.E, false, game)
+                  task.wait(0.1)
+                  v_034:SendKeyEvent(false, Enum.KeyCode.E, false, game)
+                  task.wait(0.25)
+              end
+              task.wait(0.5) -- small delay before repeating
+          end
+      end)
 
 							task.spawn(function()
 								while true do
