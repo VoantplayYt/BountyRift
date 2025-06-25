@@ -4,7 +4,7 @@
 -- Report Issues To Me | Thank You
 if game.PlaceId == 85896571713843 then
 	repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-	task.wait(0.1)
+	task.wait(2)
 
 	--// Services \--
 	local v_001 = game:GetService("Players")
@@ -135,7 +135,8 @@ if game.PlaceId == 85896571713843 then
 		task.wait(0.2)
 		local v_037 = false
 		local v_038 = v_012[v_011]
-
+		print(v_038)
+--[[
 		if v_038 then
 			for _, rift in pairs(v_014:GetChildren()) do
 				if rift.Name == v_038 then
@@ -222,7 +223,7 @@ if game.PlaceId == 85896571713843 then
 			break
 		else
 			break
-		end
+		end ]]
 	end
 else
 	return game.Players.LocalPlayer:Kick("❌ Invalid SessionID.")
