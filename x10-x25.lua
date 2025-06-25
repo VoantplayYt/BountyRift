@@ -2,6 +2,7 @@
 -- DC | Austin11111888
 -- Updated
 -- Report Issues To Me | Thank You
+
 if game.PlaceId == 85896571713843 then
 	repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
 	task.wait(0.1)
@@ -40,7 +41,6 @@ if game.PlaceId == 85896571713843 then
 		["Neon Egg"] = "neon-egg"
 	}
 
-	--// References \--
 	local v_013 = v_005.Worlds["The Overworld"].Islands
 	local v_014 = v_005:WaitForChild("Rendered"):WaitForChild("Rifts")
 	local v_015 = v_006:WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("RemoteEvent")
@@ -68,83 +68,56 @@ if game.PlaceId == 85896571713843 then
 		}
 	}
 
-	--// Helper Functions \--
 	local function getClosestIsland(targetPosition)
-		local v_017 = nil
-		local v_018 = math.huge
-
-		for key, v_044 in pairs(v_016) do
-			local v_019 = (targetPosition - v_044.Position).Magnitude
-			if v_019 < v_018 then
-				v_018 = v_019
-				v_017 = key
+		local closest, shortestDist = nil, math.huge
+		for key, data in pairs(v_016) do
+			local dist = (targetPosition - data.Position).Magnitude
+			if dist < shortestDist then
+				shortestDist = dist
+				closest = key
 			end
 		end
-
-		return v_017, v_018
+		return closest, shortestDist
 	end
 
 	local function tweenToRift(target)
-		if not (target and target:IsA("BasePart")) then
-			warn("⚠️ Invalid Target Passed To Function")
-			return
-		end
-
-		local v_020 = v_007.Character or v_007.CharacterAdded:Wait()
-		local v_021 = v_020:FindFirstChild("HumanoidRootPart")
-		if not v_021 then
-			warn("⚠️ HumanoidRootPart Not Found")
-			return
-		end
-
-		local v_022 = v_021.Position
-		local v_023 = target.Position + Vector3.new(0, 10, 0)
-		local v_024 = (v_022 - v_023).Magnitude
-
-		local v_025 = 500
-		local v_026 = math.clamp(v_024 / v_025, 4, 500)
-		local v_027 = v_024 / v_026
-
-		local v_028 = (v_023 - v_022).Unit
-		local v_029 = tick()
-
-		local v_030
-		v_030 = v_004.Heartbeat:Connect(function()
-			local v_031 = tick() - v_029
-			local v_032 = math.min(v_031 * v_027, v_024)
-			local v_033 = v_022 + v_028 * v_032
-
-			v_021.CFrame = CFrame.new(v_033, v_033 + v_021.CFrame.LookVector)
-
-			if v_032 >= v_024 then
-				v_030:Disconnect()
-				print(string.format("✅ Arrived At %s (%.2f studs)", target.Name, v_024))
-			end
+		if not (target and target:IsA("BasePart")) then return end
+		local char = v_007.Character or v_007.CharacterAdded:Wait()
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+		if not hrp then return end
+		local start = hrp.Position
+		local goal = target.Position + Vector3.new(0, 10, 0)
+		local distance = (start - goal).Magnitude
+		local speed = 500
+		local time = math.clamp(distance / speed, 4, 500)
+		local velocity = (goal - start).Unit
+		local startTime = tick()
+		local conn
+		conn = v_004.Heartbeat:Connect(function()
+			local dt = tick() - startTime
+			local step = math.min(dt * speed, distance)
+			hrppos = start + velocity * step
+			hrp.CFrame = CFrame.new(hrppos, hrppos + hrp.CFrame.LookVector)
+			if step >= distance then conn:Disconnect() end
 		end)
-
-		print(string.format("🚶 Moving To Rift '%s' Over %.2f Seconds (%.2f studs)", target.Name, v_026, v_024))
 	end
 
 	local function formatTime(seconds)
-		local v_035 = math.floor(seconds / 60)
-		local v_036 = seconds % 60
-		return string.format("%d minute%s %d second%s", v_035, v_035 ~= 1 and "s" or "", v_036, v_036 ~= 1 and "s" or "")
+		local m = math.floor(seconds / 60)
+		local s = seconds % 60
+		return string.format("%d minute%s %d second%s", m, m ~= 1 and "s" or "", s, s ~= 1 and "s" or "")
 	end
 
-	--// Main Loop \--
 	while true do
 		task.wait(0.2)
-		local v_037 = false
-		local v_038 = v_012[v_011]
-
-		if v_038 then
+		local found = false
+		local eggID = v_012[v_011]
+		if eggID then
 			for _, rift in pairs(v_014:GetChildren()) do
-				if rift.Name == v_038 then
-					v_037 = true
-
-					local v_039 = rift:GetAttribute("DespawnAt")
-					local v_040 = math.max(0, math.floor(v_039 - os.time()))
-					local v_041 = formatTime(v_040)
+				if rift.Name == eggID then
+					found = true
+					local despawnTime = math.max(0, math.floor(rift:GetAttribute("DespawnAt") - os.time()))
+					local timeLeft = formatTime(despawnTime)
 
 					local function getRiftMulti()
 						return rift:FindFirstChild("Display")
@@ -154,45 +127,43 @@ if game.PlaceId == 85896571713843 then
 							and rift.Display.SurfaceGui.Icon.Luck.Text
 					end
 
-					local v_042 = getRiftMulti()
-					if not table.find(v_009, v_042) then
-						warn(string.format("❌ Multiplier '%s' not allowed. Kicking v_007...", v_042 or "NIL"))
+					local multiplier = getRiftMulti()
+					if not table.find(v_009, multiplier) then
 						v_007:Kick("❌\n Bounty Rift multiplier not allowed.\nRejoining...")
 						task.wait(0.2)
 						v_002:Teleport(game.PlaceId, v_007)
 						break
 					end
 
-					local v_043 = rift:FindFirstChild("Output")
-					if v_043 and v_043:IsA("BasePart") then
-						local v_017, distance = getClosestIsland(v_043.Position)
-
-						if v_017 then
-							local v_044 = v_016[v_017]
-							print(string.format("📍 Closest island to '%s' Output is: %s (%.2f studs away)", rift.Name, v_017, distance))
-
-							v_015:FireServer("Teleport", v_044.v_015)
+					local output = rift:FindFirstChild("Output")
+					if output and output:IsA("BasePart") then
+						local closestIsland, dist = getClosestIsland(output.Position)
+						if closestIsland then
+							v_015:FireServer("Teleport", v_016[closestIsland].v_015)
 							task.wait(2)
-							tweenToRift(v_043)
+							tweenToRift(output)
 
-							local v_034 = game:GetService("VirtualInputManager")
+							-- Start pressing E repeatedly
 							task.spawn(function()
+								local vim = game:GetService("VirtualInputManager")
 								while true do
 									for i = 1, 5 do
-										v_034:SendKeyEvent(true, Enum.KeyCode.E, false, game)
+										vim:SendKeyEvent(true, Enum.KeyCode.E, false, game)
 										task.wait(0.1)
-										v_034:SendKeyEvent(false, Enum.KeyCode.E, false, game)
+										vim:SendKeyEvent(false, Enum.KeyCode.E, false, game)
 										task.wait(0.25)
 									end
 									task.wait(0.5)
 								end
 							end)
 
+							-- Despawn Monitor
 							task.spawn(function()
 								while true do
 									task.wait(0.2)
-									if not v_043 or not v_043.Parent or not v_014:FindFirstChild(rift.Name) then
-										warn("❌ Bounty Egg Despawned. Kicking v_007...")
+									local r = v_014:FindFirstChild(rift.Name)
+									local o = r and r:FindFirstChild("Output")
+									if not r or not o or not o:IsA("BasePart") then
 										v_007:Kick("❌\n Bounty Egg Despawned.\nRejoining...")
 										task.wait(0.2)
 										v_002:Teleport(game.PlaceId, v_007)
@@ -200,24 +171,42 @@ if game.PlaceId == 85896571713843 then
 									end
 								end
 							end)
-						else
-							warn("⚠️ No Valid Island Positions To Compare.")
-						end
-					else
-						warn("⚠️ No Output Found In Rift:", rift.Name)
-					end
 
+							-- Distance Watchdog
+							task.spawn(function()
+								while true do
+									task.wait(0.5)
+									local char = v_007.Character
+									local hrp = char and char:FindFirstChild("HumanoidRootPart")
+									local r = v_014:FindFirstChild(rift.Name)
+									local o = r and r:FindFirstChild("Output")
+									if not hrp or not o then break end
+									local dist = (hrp.Position - o.Position).Magnitude
+									if dist > 15 then
+										tweenToRift(o)
+									end
+								end
+							end)
+
+							-- Timeout Failsafe
+							task.delay(610, function()
+								if v_007 and v_007.Parent then
+									v_007:Kick("❌\n Hatch Timeout.\nRejoining...")
+									task.wait(0.2)
+									v_002:Teleport(game.PlaceId, v_007)
+								end
+							end)
+						end
+					end
 					break
 				end
 			end
 		else
-			warn("❌ Invalid v_011 value or not v_037 in v_012:", v_011)
+			v_007:Kick("❌ Invalid Egg")
 		end
 
-		if not v_037 and v_008 then
-			warn("❌ Target Rift Not Found. Rejoining...")
-			local msg = "❌\n Rift Not Found.\n" .. (v_011 and tostring(v_011) or "Unknown Rift")
-			v_007:Kick(msg)
+		if not found and v_008 then
+			v_007:Kick("❌\n Rift Not Found.\n" .. (v_011 or "Unknown"))
 			task.wait(0.2)
 			v_002:Teleport(game.PlaceId, v_007)
 			break
@@ -226,5 +215,5 @@ if game.PlaceId == 85896571713843 then
 		end
 	end
 else
-	return game.Players.LocalPlayer:Kick("❌ Invalid SessionID.")
+	game.Players.LocalPlayer:Kick("❌ Invalid SessionID.")
 end
