@@ -135,7 +135,7 @@ if game.PlaceId == 85896571713843 then
 		task.wait(0.2)
 		local v_037 = false
 		local v_038 = v_012[v_011]
-		print(v_038)
+		print(v_011)
 --[[
 		if v_038 then
 			for _, rift in pairs(v_014:GetChildren()) do
