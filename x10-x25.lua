@@ -1,6 +1,6 @@
 -- Bounty Egg
 -- DC | Austin11111888
--- Updated | V.1
+-- Updated
 -- Report Issues To Me | Thank You
 if game.PlaceId == 85896571713843 then
 	repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
@@ -21,6 +21,123 @@ if game.PlaceId == 85896571713843 then
 	local v_010 = require(v_006.Shared.Utils.Stats.SecretBountyUtil)
 	local v_999 = v_010.Get()
 	local v_011 = v_999.Egg
+
+local v_998 = {
+	v_012["Common Egg"] = {
+		"Doggy",
+		"Kitty",
+		"Bunny",
+		"Bear",
+	},
+	v_012["Spotted Egg"] = {
+		"Mouse",
+		"Wolf",
+		"Fox",
+		"Polar Bear",
+		"Panda",
+	},
+	v_012["Iceshard Egg"] = {
+		"Ice Kitty",
+		"Deer",
+		"Ice Wolf",
+		"Piggy",
+		"Ice Deer",
+		"Ice Dragon",
+	},
+	v_012["Spikey Egg"] = {
+		"Golem",
+		"Dinosaur",
+		"Ruby Golem",
+		"Dragon",
+		"Dark Dragon",
+		"Emerald Golem",
+	},
+	v_012["Magma Egg"] = {
+		"Magma Doggy",
+		"Magma Deer",
+		"Magma Fox",
+		"Magma Bear",
+		"Demon",
+		"Inferno Dragon",
+	},
+	v_012["Crystal Egg"] = {
+		"Cave Bat",
+		"Dark Bat",
+		"Angel",
+		"Emerald Bat",
+		"Unicorn",
+		"Flying Pig",
+	},
+	v_012["Lunar Egg"] = {
+		"Space Mouse",
+		"Space Bull",
+		"Lunar Fox",
+		"Lunarcorn",
+		"Lunar Serpent",
+		"Electra",
+	},
+	v_012["Void Egg"] = {
+		"Void Kitty",
+		"Void Bat",
+		"Void Demon",
+		"Dark Phoenix",
+		"Neon Elemental",
+		"NULLVoid",
+	},
+	v_012["Hell Egg"] = {
+		"Hell Piggy",
+		"Hell Dragon",
+		"Hell Crawler",
+		"Inferno Demon",
+		"Inferno Cube",
+		"Virus",
+	},
+	v_012["Nightmare Egg"] = {
+		"Demon Doggy",
+		"Skeletal Deer",
+		"Night Crawler",
+		"Hell Bat",
+		"Green Hydra",
+		"Demonic Hydra",
+	},
+	v_012["Rainbow Egg"] = {
+		"Red Golem",
+		"Orange Deer",
+		"Yellow Fox",
+		"Green Angel",
+		"Hexarium",
+		"Rainbow Shock",
+	},
+	v_012["Showman Egg"] = {
+		"Game Doggy",
+		"Gamer Boi",
+		"Queen of Hearts",
+	},
+	v_012["Neon Egg"] = {
+		"Neon Doggy",
+		"Hologram Dragon",
+		"Disco Ball",
+		"Neon Wyvern",
+		"Neon Wire Eye",
+		"Equalizer",
+	},
+	v_012["Cyber Egg"] = {
+		"Martian Kitty",
+		"Robo Kitty",
+		"Cyber Wolf",
+		"Cyborg Phoenix",
+		"Space Invader",
+		"Bionic Shard",
+	},
+	v_012["Mining Egg"] = {
+		"Mining Doggy",
+		"Mining Bat",
+		"Mining Mole",
+		"Ore Golem",
+		"Crystal Unicorn",
+		"Stone Gargoyle",
+	},
+}
 
 	local v_012 = {
 		["Crystal Egg"] = "crystal-egg",
