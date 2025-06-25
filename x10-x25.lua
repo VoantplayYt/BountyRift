@@ -1,19 +1,18 @@
-
 -- Bounty Egg
 -- DC | Austin11111888
 
 -- Report Issues To Me | Thank You
 if game.PlaceId == 85896571713843 then
-	repeat wait() until game:IsLoaded() and game.v_001.LocalPlayer
+	repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
 	task.wait(0.1)
 
 	--// Services \--
-	local v_001 = game:GetService("v_001")
-	local v_002 = game:GetService("v_002")
-	local v_003 = game:GetService("v_003")
-	local v_004 = game:GetService("v_004")
-	local v_005 = game:GetService("v_005")
-	local v_006 = game:GetService("v_006")
+	local v_001 = game:GetService("Players")
+	local v_002 = game:GetService("TeleportService")
+	local v_003 = game:GetService("TweenService")
+	local v_004 = game:GetService("RunService")
+	local v_005 = game:GetService("Workspace")
+	local v_006 = game:GetService("ReplicatedStorage")
 	local v_007 = v_001.LocalPlayer
 
 	--// Config \--
@@ -48,23 +47,23 @@ if game.PlaceId == 85896571713843 then
 	local v_016 = {
 		Floating = {
 			Position = v_013["Floating Island"].Island.Input.Position,
-			v_015 = "v_005.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn"
+			v_015 = "Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn"
 		},
 		Space = {
 			Position = v_013["Outer Space"].Island.Input.Position,
-			v_015 = "v_005.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn"
+			v_015 = "Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn"
 		},
 		Twilight = {
 			Position = v_013["Twilight"].Island.Input.Position,
-			v_015 = "v_005.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn"
+			v_015 = "Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn"
 		},
 		Void = {
 			Position = v_013["The Void"].Island.Input.Position,
-			v_015 = "v_005.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn"
+			v_015 = "Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn"
 		},
 		Zen = {
 			Position = v_013["Zen"].Island.Input.Position,
-			v_015 = "v_005.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn"
+			v_015 = "Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn"
 		}
 	}
 
@@ -157,11 +156,9 @@ if game.PlaceId == 85896571713843 then
 					local v_042 = getRiftMulti()
 					if not table.find(v_009, v_042) then
 						warn(string.format("❌ Multiplier '%s' not allowed. Kicking v_007...", v_042 or "NIL"))
-						v_007:Kick("❌
- Bounty Rift multiplier not allowed.
-Rejoining...")
+						v_007:Kick("❌\n Bounty Rift multiplier not allowed.\nRejoining...")
 						task.wait(0.2)
-						v_002:v_015(game.PlaceId, v_007)
+						v_002:Teleport(game.PlaceId, v_007)
 						break
 					end
 
@@ -173,33 +170,31 @@ Rejoining...")
 							local v_044 = v_016[v_017]
 							print(string.format("📍 Closest island to '%s' Output is: %s (%.2f studs away)", rift.Name, v_017, distance))
 
-							v_015:FireServer("v_015", v_044.v_015)
+							v_015:FireServer("Teleport", v_044.v_015)
 							task.wait(2)
 							tweenToRift(v_043)
 
-                				local v_034 = game:GetService("VirtualInputManager")
-				task.spawn(function()
-          while true do
-              for i = 1, 5 do
-                  v_034:SendKeyEvent(true, Enum.KeyCode.E, false, game)
-                  task.wait(0.1)
-                  v_034:SendKeyEvent(false, Enum.KeyCode.E, false, game)
-                  task.wait(0.25)
-              end
-              task.wait(0.5) -- small delay before repeating
-          end
-      end)
+							local v_034 = game:GetService("VirtualInputManager")
+							task.spawn(function()
+								while true do
+									for i = 1, 5 do
+										v_034:SendKeyEvent(true, Enum.KeyCode.E, false, game)
+										task.wait(0.1)
+										v_034:SendKeyEvent(false, Enum.KeyCode.E, false, game)
+										task.wait(0.25)
+									end
+									task.wait(0.5)
+								end
+							end)
 
 							task.spawn(function()
 								while true do
 									task.wait(0.2)
 									if not v_043 or not v_043.Parent or not v_014:FindFirstChild(rift.Name) then
 										warn("❌ Bounty Egg Despawned. Kicking v_007...")
-										v_007:Kick("❌
- Bounty Egg Despawned.
-Rejoining...")
+										v_007:Kick("❌\n Bounty Egg Despawned.\nRejoining...")
 										task.wait(0.2)
-										v_002:v_015(game.PlaceId, v_007)
+										v_002:Teleport(game.PlaceId, v_007)
 										break
 									end
 								end
@@ -220,15 +215,14 @@ Rejoining...")
 
 		if not v_037 and v_008 then
 			warn("❌ Target Rift Not Found. Rejoining...")
-			v_007:Kick("❌ Rift Not Found.
-Rejoining...")
+			v_007:Kick("❌ Rift Not Found.\nRejoining...")
 			task.wait(0.2)
-			v_002:v_015(game.PlaceId, v_007)
+			v_002:Teleport(game.PlaceId, v_007)
 			break
 		else
 			break
 		end
 	end
 else
-	return game.v_001.LocalPlayer:Kick("❌ Invalid SessionID.")
+	return game.Players.LocalPlayer:Kick("❌ Invalid SessionID.")
 end
