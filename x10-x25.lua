@@ -1,8 +1,6 @@
 -- Bounty Egg
 -- DC | Austin11111888
--- Updated
 -- Report Issues To Me | Thank You
-
 if game.PlaceId == 85896571713843 then
 	repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
 	task.wait(0.1)
