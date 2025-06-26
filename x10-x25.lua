@@ -79,31 +79,33 @@ if game.PlaceId == 85896571713843 then
 		return closest, shortestDist
 	end
 
-	local function tweenToRift(target, amount)
+	local function tweenToRift(target)
 	if not (target and target:IsA("BasePart")) then return end
 	local char = v_007.Character or v_007.CharacterAdded:Wait()
 	local hrp = char:FindFirstChild("HumanoidRootPart")
 	if not hrp then return end
+
 	local start = hrp.Position
 	local goal = target.Position + Vector3.new(0, 25, 0)
-	local distance = (start - goal).Magnitude
-	local speed = amount or 50
-	local time = math.clamp(distance / speed, 4, amount or 8)
-	local velocity = (goal - start).Unit
+	local duration = 6 -- fixed time
+	local direction = (goal - start)
 	local startTime = tick()
-	
+
 	local conn
 	conn = v_004.Heartbeat:Connect(function()
-		local dt = tick() - startTime
-		local step = math.min(dt * speed, distance)
-		local hrppos = start + velocity * step
-		hrp.CFrame = CFrame.new(hrppos, hrppos + hrp.CFrame.LookVector)
-		if step >= distance then
+		local elapsed = tick() - startTime
+		local alpha = math.clamp(elapsed / duration, 0, 1)
+		local newPos = start + direction * alpha
+		hrp.CFrame = CFrame.new(newPos, newPos + hrp.CFrame.LookVector)
+
+		if alpha >= 1 then
 			conn:Disconnect()
-			
+			task.wait(0.05)
+			if hrp then hrp.Anchored = true end
 		end
 	end)
 end
+
 
 	local function formatTime(seconds)
 		local m = math.floor(seconds / 60)
