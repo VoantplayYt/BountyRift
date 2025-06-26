@@ -86,7 +86,7 @@ if game.PlaceId == 85896571713843 then
 	if not hrp then return end
 
 	local start = hrp.Position
-	local goal = target.Position + Vector3.new(0, 25, 0)
+	local goal = target.Position + Vector3.new(0, 15, 0)
 	local duration = 6 -- fixed time
 	local direction = (goal - start)
 	local startTime = tick()
