@@ -1,5 +1,6 @@
 -- Bounty Egg
 -- DC | Austin11111888
+-- Test 1
 -- Report Issues To Me | Thank You
 if game.PlaceId == 85896571713843 then
 	repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
@@ -208,7 +209,8 @@ end
 		end
 
 		if not found and v_008 then
-			v_007:Kick("❌\n Rift Not Found.\n" .. v_011)
+			local v_941 = "❌\n Rift Not Found.\n" .. v_011 or "Unknown Egg"
+			v_007:Kick(v_941)
 			task.wait(0.2)
 			v_002:Teleport(game.PlaceId, v_007)
 			break
