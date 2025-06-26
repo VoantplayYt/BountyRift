@@ -17,10 +17,11 @@ if game.PlaceId == 85896571713843 then
 
 	--// Config \--
 	local v_008 = true
-	local v_009 = {"x10","x25"}
+	local v_242 = {"x5", "x10", "x25"}
+	local v_009 = getgenv().Multi or v_242
 	local v_010 = require(v_006.Shared.Utils.Stats.SecretBountyUtil)
 	local v_999 = v_010.Get()
-	local v_011 = v_999.Egg
+	local v_011 = getgenv().EggOverride or v_999.Egg
 
 	local v_012 = {
 		["Crystal Egg"] = "crystal-egg",
@@ -122,10 +123,17 @@ end
 	while true do
 		task.wait(0.2)
 		local found = false
-		local eggID = v_012[v_011]
-		if eggID then
+		local eggNames = type(v_011) == "table" and v_011 or {v_011}
+		local eggIDs = {}
+		for _, name in ipairs(eggNames) do
+			local id = v_012[name]
+			if id then
+				table.insert(eggIDs, id)
+			end
+		end
+		if #eggIDs > 0 then
 			for _, rift in pairs(v_014:GetChildren()) do
-				if rift.Name == eggID then
+				if table.find(eggIDs, rift.Name) then
 					found = true
 					local despawnTime = math.max(0, math.floor(rift:GetAttribute("DespawnAt") - os.time()))
 					local timeLeft = formatTime(despawnTime)
