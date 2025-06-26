@@ -120,6 +120,8 @@ end
 		return string.format("%d minute%s %d second%s", m, m ~= 1 and "s" or "", s, s ~= 1 and "s" or "")
 	end
 
+	local pressingE = false
+
 	while true do
 		task.wait(0.2)
 		local found = false
@@ -160,21 +162,24 @@ end
 						if closestIsland then
 							v_015:FireServer("Teleport", v_016[closestIsland].v_015)
 							task.wait(2)
-							tweenToRift(output, 500)
+							tweenToRift(output)
 
 							-- Start pressing E
-							task.spawn(function()
-								local vim = game:GetService("VirtualInputManager")
-								while true do
-									for i = 1, 5 do
-										vim:SendKeyEvent(true, Enum.KeyCode.E, false, game)
-										task.wait(0.1)
-										vim:SendKeyEvent(false, Enum.KeyCode.E, false, game)
-										task.wait(0.25)
+							if not pressingE then
+								pressingE = true
+								task.spawn(function()
+									local vim = game:GetService("VirtualInputManager")
+									while true do
+										for i = 1, 5 do
+											vim:SendKeyEvent(true, Enum.KeyCode.E, false, game)
+											task.wait(0.1)
+											vim:SendKeyEvent(false, Enum.KeyCode.E, false, game)
+											task.wait(0.25)
+										end
+										task.wait(0.5)
 									end
-									task.wait(0.5)
-								end
-							end)
+								end)
+							end
 
 							-- Despawn Monitor
 							task.spawn(function()
@@ -202,7 +207,7 @@ end
 									if not hrp or not o then break end
 									local dist = (hrp.Position - o.Position).Magnitude
 									if dist > 15 then
-										tweenToRift(o, 50)
+										tweenToRift(o)
 									end
 								end
 							end)
