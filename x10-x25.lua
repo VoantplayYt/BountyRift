@@ -1,6 +1,6 @@
 -- Bounty Egg
 -- DC | Austin11111888
--- Test 1
+-- Test 5
 -- Report Issues To Me | Thank You
 if game.PlaceId == 85896571713843 then
 	repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
@@ -87,24 +87,30 @@ if game.PlaceId == 85896571713843 then
 
 	local start = hrp.Position
 	local goal = target.Position + Vector3.new(0, 15, 0)
-	local duration = 6 -- fixed time
+	local duration = 10 -- total travel time
 	local direction = (goal - start)
 	local startTime = tick()
+
+	local function easeOutQuad(t)
+		return 1 - (1 - t)^2
+	end
 
 	local conn
 	conn = v_004.Heartbeat:Connect(function()
 		local elapsed = tick() - startTime
 		local alpha = math.clamp(elapsed / duration, 0, 1)
-		local newPos = start + direction * alpha
+		local easedAlpha = easeOutQuad(alpha)
+		local newPos = start + direction * easedAlpha
 		hrp.CFrame = CFrame.new(newPos, newPos + hrp.CFrame.LookVector)
 
 		if alpha >= 1 then
 			conn:Disconnect()
-			task.wait(0.05)
+			task.wait(0.2)
 			if hrp then hrp.Anchored = true end
 		end
 	end)
 end
+
 
 
 	local function formatTime(seconds)
