@@ -80,27 +80,34 @@ if game.PlaceId == 85896571713843 then
 		return closest, shortestDist
 	end
 
-	local function tweenToRift(target)
-		if not (target and target:IsA("BasePart")) then return end
-		local char = v_007.Character or v_007.CharacterAdded:Wait()
-		local hrp = char:FindFirstChild("HumanoidRootPart")
-		if not hrp then return end
-		local start = hrp.Position
-		local goal = target.Position + Vector3.new(0, 10, 0)
-		local distance = (start - goal).Magnitude
-		local speed = 500
-		local time = math.clamp(distance / speed, 4, 500)
-		local velocity = (goal - start).Unit
-		local startTime = tick()
-		local conn
-		conn = v_004.Heartbeat:Connect(function()
-			local dt = tick() - startTime
-			local step = math.min(dt * speed, distance)
-			hrppos = start + velocity * step
-			hrp.CFrame = CFrame.new(hrppos, hrppos + hrp.CFrame.LookVector)
-			if step >= distance then conn:Disconnect() end
-		end)
-	end
+	local function tweenToRift(target, amount)
+	if not (target and target:IsA("BasePart")) then return end
+	local char = v_007.Character or v_007.CharacterAdded:Wait()
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	if not hrp then return end
+	
+	hrp.Anchored = true
+	
+	local start = hrp.Position
+	local goal = target.Position + Vector3.new(0, 25, 0)
+	local distance = (start - goal).Magnitude
+	local speed = amount or 50
+	local time = math.clamp(distance / speed, 4, amount or 8)
+	local velocity = (goal - start).Unit
+	local startTime = tick()
+	
+	local conn
+	conn = v_004.Heartbeat:Connect(function()
+		local dt = tick() - startTime
+		local step = math.min(dt * speed, distance)
+		local hrppos = start + velocity * step
+		hrp.CFrame = CFrame.new(hrppos, hrppos + hrp.CFrame.LookVector)
+		if step >= distance then
+			conn:Disconnect()
+			
+		end
+	end)
+end
 
 	local function formatTime(seconds)
 		local m = math.floor(seconds / 60)
