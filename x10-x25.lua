@@ -213,7 +213,7 @@ end
 		end
 
 		if not found and v_008 then
-			v_007:Kick("❌\n Rift Not Found.\n" .. (v_011 or "Unknown"))
+			v_007:Kick("❌\n Rift Not Found.\n" .. v_011)
 			task.wait(0.2)
 			v_002:Teleport(game.PlaceId, v_007)
 			break
