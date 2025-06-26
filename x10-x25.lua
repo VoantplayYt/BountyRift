@@ -83,9 +83,6 @@ if game.PlaceId == 85896571713843 then
 	local char = v_007.Character or v_007.CharacterAdded:Wait()
 	local hrp = char:FindFirstChild("HumanoidRootPart")
 	if not hrp then return end
-	
-	hrp.Anchored = true
-	
 	local start = hrp.Position
 	local goal = target.Position + Vector3.new(0, 25, 0)
 	local distance = (start - goal).Magnitude
@@ -146,9 +143,9 @@ end
 						if closestIsland then
 							v_015:FireServer("Teleport", v_016[closestIsland].v_015)
 							task.wait(2)
-							tweenToRift(output)
+							tweenToRift(output, 500)
 
-							-- Start pressing E repeatedly
+							-- Start pressing E
 							task.spawn(function()
 								local vim = game:GetService("VirtualInputManager")
 								while true do
@@ -188,7 +185,7 @@ end
 									if not hrp or not o then break end
 									local dist = (hrp.Position - o.Position).Magnitude
 									if dist > 15 then
-										tweenToRift(o)
+										tweenToRift(o, 50)
 									end
 								end
 							end)
