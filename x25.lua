@@ -1,21 +1,14 @@
---// Services
+-- ✅ Required setup
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local DigReplicate = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Dig_Replicate")
+local DigFinished = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Dig_Finished")
 local vector = Vector3.new
-local DigReplicate = ReplicatedStorage.Remotes:WaitForChild("Dig_Replicate")
-local DigFinished = ReplicatedStorage.Remotes:WaitForChild("Dig_Finished")
 
---// Hook Dig_Replicate to trigger Dig_Finished
-local oldNamecall
-oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
-local args = { ... }
-local method = getnamecallmethod():lower()
-
-if not checkcaller() and self == DigReplicate and method == "fireserver" then
-		-- Call Dig_Finished shortly after the dig
-	task.delay(0.1, function()
-		local digArgs = {
-			0,
-			{
+-- ✅ Full argument payload you want to send
+local function getFinishedArgs()
+	return {
+		0,
+		{
 				{
 					Orientation = vector(),
 					Transparency = 1,
@@ -156,13 +149,33 @@ if not checkcaller() and self == DigReplicate and method == "fireserver" then
 					Shape = Enum.PartType.Block,
 					Size = vector.create(7.467870235443115, 3.397007942199707, 4.717135906219482)
 				}
-			}
-			DigFinished:FireServer(unpack(digArgs))
-			print("✅ Sent Dig_Finished after Dig_Replicate")
+		}
+	}
+end
+
+-- ✅ Hook FireServer on Dig_Replicate
+local oldNamecall
+oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+	local args = { ... }
+	local method = getnamecallmethod():lower()
+
+	if not checkcaller() and self == DigReplicate and method == "fireserver" then
+		print("📡 Dig_Replicate Detected")
+
+		task.defer(function()
+			local args = getFinishedArgs()
+			local success, err = pcall(function()
+				DigFinished:FireServer(unpack(args))
+			end)
+			if success then
+				print("✅ Sent Dig_Finished with custom args")
+			else
+				warn("❌ Failed to send Dig_Finished:", err)
+			end
 		end)
 	end
 
 	return oldNamecall(self, ...)
 end)
 
-print("📦 Auto Dig_Finished system loaded.")
+print("✅ Auto-Dig Finished Hook Loaded")
