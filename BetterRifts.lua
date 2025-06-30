@@ -14,6 +14,7 @@ if game.PlaceId == 85896571713843 then
 	local v_004 = game:GetService("RunService")
 	local v_005 = game:GetService("Workspace")
 	local v_006 = game:GetService("ReplicatedStorage")
+	local v_451 = game:GetService("HttpService")
 	local v_007 = v_001.LocalPlayer
 
 	--// Config \--
@@ -69,6 +70,57 @@ if game.PlaceId == 85896571713843 then
 			v_015 = "Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn"
 		}
 	}
+
+	local function sendDiscordEggWebhook(eggName, luckMulti, timeLeft, height, placeId, jobId)
+	local url = "https://discord.com/api/webhooks/1389075055157444710/5eHIwr_EIn3GBsDAZQyxXm-JNXZAFN7L_Y5CS6uE8Fzg4RrFzuvH3qGfrhN5Xty2zBf1"
+
+	local data = {
+		["embeds"] = {{
+			["title"] = eggName .. " Found!!!",
+			["description"] = "A(n) **" .. eggName .. "** Has Been Found!",
+			["color"] = 16734296,
+			["fields"] = {
+				{
+					["name"] = "Server Info",
+					["value"] = "Players: " .. tostring(#game:GetService("Players"):GetPlayers()) .. "/12",
+					["inline"] = true
+				},
+				{
+					["name"] = "Rift Info",
+					["value"] = "Luck Multi: " .. tostring(luckMulti) .. "\nExpires: " .. timeLeft .. "\nHeight: " .. tostring(height) .. " meters",
+					["inline"] = true
+				},
+				{
+					["name"] = "Join Script",
+					["value"] = string.format("```lua\ngame:GetService(\"TeleportService\"):TeleportToPlaceInstance(%d, \"%s\")\n```", placeId, jobId),
+					["inline"] = false
+				},
+				{
+					["name"] = "Server Link",
+					["value"] = "[Click to Join](https://www.roblox.com/games/" .. tostring(placeId) .. "?privateServerLinkCode=" .. jobId .. ")",
+					["inline"] = false
+				}
+			},
+			["footer"] = {
+				["text"] = "Created By YourName | " .. os.date("%x %X")
+			}
+		}}
+	}
+
+	local headers = {
+		["Content-Type"] = "application/json"
+	}
+
+	local payload = game:GetService("HttpService"):JSONEncode(data)
+
+	syn.request({
+		Url = url,
+		Method = "POST",
+		Headers = headers,
+		Body = payload
+	})
+end
+
 
 	local function getClosestIsland(targetPosition)
 		local closest, shortestDist = nil, math.huge
@@ -169,6 +221,10 @@ if game.PlaceId == 85896571713843 then
 							v_015:FireServer("Teleport", v_016[closestIsland].v_015)
 							task.wait(2)
 							tweenToRift(output)
+
+							if getRiftMulti() == "x25" then
+								sendDiscordEggWebhook(rift.Name, getRiftMulti(), timeLeft, math.floor(rift.Position.Y), game.PlaceId, game.JobId)
+							end
 
 							if not pressingE then
 								pressingE = true
