@@ -2,6 +2,7 @@
 -- DC | Austin11111888
 -- Test 5
 -- Report Issues To Me | Thank You
+
 if game.PlaceId == 85896571713843 then
 	repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
 	task.wait(0.1)
@@ -39,7 +40,7 @@ if game.PlaceId == 85896571713843 then
 		["Nightmare Egg"] = "nightmare-egg",
 		["Showman Egg"] = "showman-egg",
 		["Neon Egg"] = "neon-egg",
-		["July Egg"] = "festival-rift-2",
+		["July Egg"] = { "festival-rift-1", "festival-rift-2", "festival-rift-3" }
 	}
 
 	local v_013 = v_005.Worlds["The Overworld"].Islands
@@ -82,38 +83,36 @@ if game.PlaceId == 85896571713843 then
 	end
 
 	local function tweenToRift(target)
-	if not (target and target:IsA("BasePart")) then return end
-	local char = v_007.Character or v_007.CharacterAdded:Wait()
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	if not hrp then return end
+		if not (target and target:IsA("BasePart")) then return end
+		local char = v_007.Character or v_007.CharacterAdded:Wait()
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+		if not hrp then return end
 
-	local start = hrp.Position
-	local goal = target.Position + Vector3.new(0, 15, 0)
-	local duration = 10 -- total travel time
-	local direction = (goal - start)
-	local startTime = tick()
+		local start = hrp.Position
+		local goal = target.Position + Vector3.new(0, 15, 0)
+		local duration = 10
+		local direction = (goal - start)
+		local startTime = tick()
 
-	local function easeOutQuad(t)
-		return 1 - (1 - t)^2
-	end
-
-	local conn
-	conn = v_004.Heartbeat:Connect(function()
-		local elapsed = tick() - startTime
-		local alpha = math.clamp(elapsed / duration, 0, 1)
-		local easedAlpha = easeOutQuad(alpha)
-		local newPos = start + direction * easedAlpha
-		hrp.CFrame = CFrame.new(newPos, newPos + hrp.CFrame.LookVector)
-
-		if alpha >= 1 then
-			conn:Disconnect()
-			task.wait(0.2)
-			if hrp then hrp.Anchored = true end
+		local function easeOutQuad(t)
+			return 1 - (1 - t)^2
 		end
-	end)
-end
 
+		local conn
+		conn = v_004.Heartbeat:Connect(function()
+			local elapsed = tick() - startTime
+			local alpha = math.clamp(elapsed / duration, 0, 1)
+			local easedAlpha = easeOutQuad(alpha)
+			local newPos = start + direction * easedAlpha
+			hrp.CFrame = CFrame.new(newPos, newPos + hrp.CFrame.LookVector)
 
+			if alpha >= 1 then
+				conn:Disconnect()
+				task.wait(0.2)
+				if hrp then hrp.Anchored = true end
+			end
+		end)
+	end
 
 	local function formatTime(seconds)
 		local m = math.floor(seconds / 60)
@@ -128,12 +127,18 @@ end
 		local found = false
 		local eggNames = type(v_011) == "table" and v_011 or {v_011}
 		local eggIDs = {}
+
 		for _, name in ipairs(eggNames) do
-			local id = v_012[name]
-			if id then
-				table.insert(eggIDs, id)
+			local ids = v_012[name]
+			if typeof(ids) == "string" then
+				table.insert(eggIDs, ids)
+			elseif typeof(ids) == "table" then
+				for _, id in ipairs(ids) do
+					table.insert(eggIDs, id)
+				end
 			end
 		end
+
 		if #eggIDs > 0 then
 			for _, rift in pairs(v_014:GetChildren()) do
 				if table.find(eggIDs, rift.Name) then
@@ -159,19 +164,18 @@ end
 
 					local output = rift:FindFirstChild("Output")
 					if output and output:IsA("BasePart") then
-						local closestIsland, dist = getClosestIsland(output.Position)
+						local closestIsland = getClosestIsland(output.Position)
 						if closestIsland then
 							v_015:FireServer("Teleport", v_016[closestIsland].v_015)
 							task.wait(2)
 							tweenToRift(output)
 
-							-- Start pressing E
 							if not pressingE then
 								pressingE = true
 								task.spawn(function()
 									local vim = game:GetService("VirtualInputManager")
 									while true do
-										for i = 1, 5 do
+										for _ = 1, 5 do
 											vim:SendKeyEvent(true, Enum.KeyCode.E, false, game)
 											task.wait(0.1)
 											vim:SendKeyEvent(false, Enum.KeyCode.E, false, game)
@@ -182,7 +186,6 @@ end
 								end)
 							end
 
-							-- Despawn Monitor
 							task.spawn(function()
 								while true do
 									task.wait(0.2)
@@ -197,7 +200,6 @@ end
 								end
 							end)
 
-							-- Distance Watchdog
 							task.spawn(function()
 								while true do
 									task.wait(0.5)
@@ -213,7 +215,6 @@ end
 								end
 							end)
 
-							-- Timeout Failsafe
 							task.delay(610, function()
 								if v_007 and v_007.Parent then
 									v_007:Kick("❌\n Hatch Timeout.\nRejoining...")
@@ -231,7 +232,8 @@ end
 		end
 
 		if not found and v_008 then
-			local v_941 = "❌\n Rift Not Found.\n" .. v_011 or "Unknown Egg"
+			local displayEgg = type(v_011) == "string" and v_011 or "Unknown Egg"
+			local v_941 = "❌\n Rift Not Found.\n" .. displayEgg
 			v_007:Kick(v_941)
 			task.wait(0.2)
 			v_002:Teleport(game.PlaceId, v_007)
