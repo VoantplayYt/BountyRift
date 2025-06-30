@@ -38,7 +38,8 @@ if game.PlaceId == 85896571713843 then
 		["Hell Egg"] = "hell-egg",
 		["Nightmare Egg"] = "nightmare-egg",
 		["Showman Egg"] = "showman-egg",
-		["Neon Egg"] = "neon-egg"
+		["Neon Egg"] = "neon-egg",
+		["July Egg"] = "festival-rift-2",
 	}
 
 	local v_013 = v_005.Worlds["The Overworld"].Islands
