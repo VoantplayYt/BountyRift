@@ -102,7 +102,7 @@ if game.PlaceId == 85896571713843 then
 				}
 			},
 			["footer"] = {
-				["text"] = "Created By YourName | " .. os.date("%x %X")
+				["text"] = "Created By Austin | " .. os.date("%x %X")
 			}
 		}}
 	}
